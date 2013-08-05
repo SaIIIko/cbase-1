@@ -1,0 +1,6 @@
+; Packaging information for 5pika
+name = "5pika - Demo"
+description = "Full size package"
+core = "7.x"
+
+; files[] = inspirodemo.profile

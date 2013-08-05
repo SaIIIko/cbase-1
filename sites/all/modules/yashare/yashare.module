@@ -1,0 +1,270 @@
+<?php
+
+/**
+ * @file
+ * Yandex.Share module main file.
+ */
+
+module_load_include('inc', 'yashare');
+module_load_include('inc', 'yashare', 'yashare.block');
+
+/**
+ * Implements hook_help().
+ */
+function yashare_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#yashare':
+      // Return a line-break version of the module README.txt
+      return _filter_autop(file_get_contents(dirname(__FILE__) . "/README.txt"));
+      break;
+  }
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function yashare_field_extra_fields() {
+  $extra = array();
+  $share_field = array(
+    'label' => t('Yandex.Share'),
+    'description' => t('Yandex Share button'),
+    'weight' => 100,
+  );
+  foreach (node_type_get_types() as $type) {
+    $extra['node'][$type->type]['display']['yashare'] = $share_field;
+  }
+  if ($taxonomy_info = entity_get_info('taxonomy_term')) {
+    foreach (array_keys($taxonomy_info['bundles']) as $bundle) {
+      $extra['taxonomy_term'][$bundle]['display']['yashare'] = $share_field;
+    }
+  }
+  return $extra;
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function yashare_node_view($node, $view_mode, $langcode) {
+  $node->content['yashare'] = yashare_build('node-' . $node->nid . '-' . $view_mode, 'node/' . $node->nid, $node->title);
+}
+
+/**
+ * Implements hook_taxonomy_term_view_alter().
+ */
+function yashare_taxonomy_term_view_alter(&$build) {
+  $build['yashare'] = yashare_build(
+    'taxonomy-term-' . $build['#term']->tid . '-' . $build['#view_mode'],
+    'taxonomy/term/' . $build['#term']->tid,
+    $build['#term']->name
+  );
+}
+
+/**
+ * Implements hook_permission().
+ */
+function yashare_permission() {
+  return array(
+    'administer yashare' => array(
+      'title' => t('Administer Yandex.Share'),
+      'description' => t('Perform administration tasks for Yandex.Share module.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function yashare_menu() {
+  $items['admin/config/services/yashare'] = array(
+    'title' => 'Yandex.Share',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('yashare_settings'),
+    'access arguments' => array('administer yashare'),
+  );
+  return $items;
+}
+
+/**
+ * Returns settings form.
+ */
+function yashare_settings() {
+  $form['settings'] = array(
+    '#type' => 'vertical_tabs',
+  );
+  $form['settings']['general'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General settings'),
+  );
+  $form['settings']['general']['yashare_l10n'] = array(
+    '#type' => 'select',
+    '#title' => t('Language'),
+    '#options' => yashare_get_languages(),
+    '#default_value' => yashare_get_language(),
+  );
+  $title = drupal_get_title();
+  $form['settings']['general']['yashare_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('Style'),
+    '#options' => array(
+      'button' => yashare_render('init-button', '<front>', $title, NULL, 'button'),
+      'link' => yashare_render('init-link', '<front>', $title, NULL, 'link'),
+      'icon' => yashare_render('init-icon', '<front>', $title, NULL, 'icon'),
+      'none' => yashare_render('init-none', '<front>', $title, NULL, 'none'),
+    ),
+    '#default_value' => variable_get('yashare_type', 'button'),
+  );
+  $form['settings']['general']['yashare_border'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Border'),
+    '#default_value' => variable_get('yashare_border', FALSE),
+  );
+  $form['settings']['general']['yashare_linkunderline'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Underline link'),
+    '#default_value' => variable_get('yashare_linkunderline', FALSE),
+  );
+  $form['settings']['general']['yashare_linkicon'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Icon link'),
+    '#default_value' => variable_get('yashare_linkicon', FALSE),
+  );
+  $form['settings']['general']['yashare_image'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Pass site logo'),
+    '#default_value' => variable_get('yashare_image', FALSE),
+  );
+
+  $form['settings']['block_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Display settings'),
+  );
+  $form['settings']['block_settings']['yashare_block_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Block title'),
+    '#default_value' => variable_get('yashare_block_title', ''),
+  );
+  $form['settings']['block_settings']['yashare_block_services'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Inline services'),
+    '#options' => yashare_get_services(),
+    '#default_value' => yashare_get_block_services(),
+  );
+
+  $form['settings']['popup_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Popup settings'),
+  );
+  $form['settings']['popup_settings']['yashare_popup_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Popup title'),
+    '#default_value' => variable_get('yashare_popup_title', ''),
+  );
+  $form['settings']['popup_settings']['yashare_popup_link'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show link for copy'),
+    '#default_value' => variable_get('yashare_popup_link', FALSE),
+  );
+  $form['settings']['popup_settings']['yashare_popup_codeforblog'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show code for blog'),
+    '#default_value' => variable_get('yashare_popup_codeforblog', FALSE),
+  );
+  $form['settings']['popup_settings']['yashare_popup_vdirection'] = array(
+    '#type' => 'select',
+    '#title' => t('Popup direction'),
+    '#options' => array(
+      0 => t('Auto'),
+      'up' => t('Up'),
+      'down' => t('Down'),
+    ),
+    '#default_value' => variable_get('yashare_popup_vdirection', 0),
+  );
+  $form['settings']['popup_settings']['yashare_popup_services'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Popup services'),
+    '#options' => yashare_get_services(),
+    '#default_value' => yashare_get_popup_services(),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Generate renderable array.
+ */
+function yashare_build($id = NULL, $link = NULL, $title = NULL, $description = NULL, $type = NULL) {
+  if (!$id) {
+    static $counter = NULL;
+    if (NULL == $counter) {
+      $counter = 0;
+    }
+    $id = 'auto-' . $counter++;
+  }
+  $block_id = 'yashare-' . $id;
+  $params = array(
+    'element' => $block_id,
+    'l10n' => yashare_get_language(TRUE),
+  );
+  if (variable_get('yashare_image', FALSE)) {
+    $params['image'] = theme_get_setting('logo');
+  }
+  if ($link) {
+    $params['link'] = url(drupal_get_path_alias($link), array('absolute' => TRUE));
+  }
+  if ($title) {
+    $params['title'] = check_plain($title . ' | ' . variable_get('site_name', 'Drupal'));
+  }
+  if ($description) {
+    $params['description'] = check_plain($description);
+  }
+  $params['elementStyle'] = array(
+    'text' => check_plain(variable_get('yashare_block_title', '')),
+    'type' => $type ? check_plain($type) : variable_get('yashare_type', 'button'),
+    'border' => variable_get('yashare_border', FALSE),
+    'linkUnderline' => variable_get('yashare_linkunderline', FALSE),
+    'linkIcon' => variable_get('yashare_linkicon', FALSE),
+    'quickServices' => yashare_get_block_services(),
+  );
+  $popup_title = variable_get('yashare_popup_title', '');
+  $params['popupStyle'] = array(
+    'blocks' => $popup_title ? array(check_plain($popup_title) => yashare_get_popup_services()) : yashare_get_popup_services(),
+    'copyPasteField' => variable_get('yashare_popup_link', FALSE),
+  );
+  if (variable_get('yashare_popup_codeforblog', FALSE) && isset($params['title']) && isset($params['link'])) {
+    $params['popupStyle']['codeForBlog'] = l($params['title'], $params['link'], array('attributes' => array('title' => $params['title'], 'target' => '_blank')));
+  }
+  if ($vdirection = variable_get('yashare_popup_vdirection', 0)) {
+    $params['popupStyle']['vDirection'] = $vdirection;
+  }
+
+  $element = array(
+    '#type' => 'html_tag',
+    '#tag' => 'span',
+    '#attributes' => array('id' => $block_id),
+    '#value' => '',
+  );
+  $element['#attached']['js'] = array(
+    '//yandex.st/share/share.js' => array(
+      'type' => 'external',
+      'scope' => 'footer',
+      'weight' => 10,
+    ),
+    drupal_get_path('module', 'yashare') . '/yashare.js' => array(
+      'scope' => 'footer',
+      'weight' => 11,
+    ),
+  );
+  $element['#attached']['js'][] = array(
+    'data' => array('yashare' => array($block_id => $params)),
+    'type' => 'setting',
+  );
+  return $element;
+}
+
+/**
+ * Render Yandex.Share block.
+ */
+function yashare_render($id = NULL, $link = NULL, $title = NULL, $description = NULL, $type = NULL) {
+  $element = yashare_build($id, $link, $title, $description, $type);
+  return drupal_render($element);
+}

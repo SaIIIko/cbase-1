@@ -1,0 +1,34 @@
+<?php
+/**
+ * @file
+ * Code for the Theme configurations & settings feature.
+ */
+
+include_once 'theme_configurations_settings.features.inc';
+
+function theme_configurations_settings_menu() {
+	$items['siteconfig'] = array(
+		'title' => 'Настройка информации о сайте',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('theme_conf_settings_form'),
+		'access arguments' => array('delete any page content'),
+		'type' => MENU_LOCAL_TASK,    
+	);
+	return $items;
+}
+
+function theme_conf_settings_form() {
+	$form['site_name'] = array(
+		'#type' => 'textfield',
+		'#title' => 'Название сайта',
+		'#default_value' => variable_get('site_name', 'Название'),
+		'#required' => true,
+	); 
+	$form['site_slogan'] = array(
+		'#type' => 'textfield',
+		'#title' => 'Слоган',
+		'#default_value' => variable_get('site_slogan', 'Слоган'),
+		'#required' => true,
+	); 
+	return system_settings_form($form);
+}

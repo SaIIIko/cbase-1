@@ -1,0 +1,6 @@
+; Packaging information for inspirob
+name = "5pika"
+description = "Clean install package without content"
+core = "7.x"
+
+; files[] = inspiro.profile

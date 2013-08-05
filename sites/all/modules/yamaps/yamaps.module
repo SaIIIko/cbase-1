@@ -1,0 +1,216 @@
+<?php
+
+/**
+ * @file
+ * Yandex.Maps module main file.
+ */
+
+/**
+ * Includes.
+ */
+module_load_include('inc', 'yamaps', 'inc/yamaps.formatter');
+module_load_include('inc', 'yamaps', 'inc/yamaps.widget');
+module_load_include('inc', 'yamaps', 'inc/yamaps.block');
+
+/**
+ * Implements hook_field_info().
+ */
+function yamaps_field_info() {
+  return array(
+    'field_yamaps' => array(
+      'label' => t('Yandex map'),
+      'default_widget' => 'yamaps_field',
+      'default_formatter' => 'field_yamaps_formatter_dynamic',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function yamaps_field_is_empty($item, $field) {
+  return empty($item['coords']);
+}
+
+/**
+ * Implements hook_element_info().
+ */
+function yamaps_element_info() {
+  $elements = array();
+  $elements['yamaps_field'] = array(
+    '#input' => TRUE,
+    '#process' => array('yamaps_field_process'),
+    '#theme_wrappers' => array('form_element'),
+  );
+  return $elements;
+}
+
+/**
+ * Process field for edit form.
+ * @see yamaps_element_info()
+ */
+function yamaps_field_process($element, $form_state, $complete_form) {
+
+  // Issue #1712292 fix.
+  // TODO: Need to be deleted when Fields API fixed.
+  if (isset($element['#entity']) && $entity = $element['#entity']) {
+    if (isset($entity->vid) && !$element['#value']) {
+      $entity_type = $element['#entity_type'];
+      $field_name = $element['#field_name'];
+      $instance = field_info_instance($entity_type, $field_name, $entity->type);
+      $field = field_info_field($field_name);
+      $default_value = field_get_default_value($entity_type, $entity, $field, $instance);
+      $element['#default_value'] = $element['#value'] = reset($default_value);
+    }
+  }
+
+  // Map information.
+  $coords = isset($element['#value']['coords']) ? $element['#value']['coords'] : NULL;
+  $coords_array = drupal_json_decode($coords);
+  $type = isset($element['#value']['type']) ? $element['#value']['type'] : 'yandex#map';
+  $placemarks = isset($element['#value']['placemarks']) ? $element['#value']['placemarks'] : NULL;
+  $placemarks_array = drupal_json_decode($placemarks);
+  $lines = isset($element['#value']['lines']) ? $element['#value']['lines'] : NULL;
+  $lines_array = drupal_json_decode($lines);
+  $polygons = isset($element['#value']['polygons']) ? $element['#value']['polygons'] : NULL;
+  $polygons_array = drupal_json_decode($polygons);
+  $routes = isset($element['#value']['routes']) ? $element['#value']['routes'] : NULL;
+  $routes_array = drupal_json_decode($routes);
+
+  // Unique map id.
+  $id = 'ymap-' . $element['#delta'] . '-edit';
+  // Map initialization parameters.
+  $map = array(
+    'init' => array(
+      'center' => $coords_array['center'],
+      'zoom' => $coords_array['zoom'],
+      'type' => $type,
+      'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
+    ),
+    'controls' => 1,
+    'traffic' => 0,
+    'placemarks' => $placemarks_array,
+    'lines' => $lines_array,
+    'polygons' => $polygons_array,
+    'routes' => $routes_array,
+    'edit' => TRUE,
+  );
+
+  // Add information about this map to js.
+  drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
+  // Load library.
+  drupal_add_library('yamaps', 'yamaps.full');
+
+  // Map container.
+  $element['map'] = array(
+    '#markup' => '<div id="' . $id . '" style="width:100%;height:400px"></div>',
+  );
+  // Hidden elements to saving map information.
+  $element['coords'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Coordinates'),
+    '#default_value' => $coords,
+    '#required' => $element['#required'],
+    '#attributes' => array('class' => array('field-yamaps-coords-' . $id)),
+  );
+  $element['type'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Type'),
+    '#default_value' => $type,
+    '#attributes' => array('class' => array('field-yamaps-type-' . $id)),
+  );
+  $element['placemarks'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Placemarks'),
+    '#default_value' => $placemarks,
+    '#attributes' => array('class' => array('field-yamaps-placemarks-' . $id)),
+  );
+  $element['lines'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Lines'),
+    '#default_value' => $lines,
+    '#attributes' => array('class' => array('field-yamaps-lines-' . $id)),
+  );
+  $element['polygons'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Polygons'),
+    '#default_value' => $polygons,
+    '#attributes' => array('class' => array('field-yamaps-polygons-' . $id)),
+  );
+  $element['routes'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Routes'),
+    '#default_value' => $routes,
+    '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
+  );
+
+  // Map description.
+  $element['#description'] = '<div class="yamaps-terms">' . l(
+    t('Terms of service «API Yandex.Maps»'),
+    'http://legal.yandex.ru/maps_api/',
+    array('attributes' => array('target' => '_blank'))
+  ) . '</div>';
+
+  return $element;
+}
+
+/**
+ * Implements hook_library().
+ */
+function yamaps_library() {
+  // Users language.
+  global $language;
+  // Module path.
+  $path = drupal_get_path('module', 'yamaps') . '/misc/';
+  // Weight counter.
+  $w = 10;
+  // API url.
+  $api_url = 'http://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU&wizard=Drupal_yamaps_' . $language->language;
+
+  $libraries['yamaps.full'] = array(
+    'title' => 'Yandex maps. Edit mode.',
+    'version' => '2.x',
+    'js' => array(
+      $api_url => array(
+        'type' => 'external',
+        'scope' => 'footer',
+        'weight' => $w++,
+      ),
+      $path . 'yamaps.init.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.layouts.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.placemark.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.line.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.polygon.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.route.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.map.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.run.js' => array('scope' => 'footer', 'weight' => $w++),
+    ),
+    'css' => array(
+      $path . 'yamaps.css' => array(),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_help().
+ */
+function yamaps_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#yamaps':
+      // Return a line-break version of the module README.txt
+      return _filter_autop(file_get_contents(dirname(__FILE__) . "/README.txt"));
+      break;
+  }
+}
+
+/**
+ * Validate pixels or percentage value.
+ */
+function yamaps_field_validate_pixels_percentage($element, &$form_state) {
+  $value = $element['#value'];
+  if (!preg_match('/^[1-9]{1}[0-9]*(px|%)$/', $value)) {
+    form_error($element, t('%name must be a positive integer or percentage value.', array('%name' => $element['#title'])));
+  }
+}

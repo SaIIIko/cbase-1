@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the yashare module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function yashare_uninstall() {
+  variable_del('yashare_type');
+  variable_del('yashare_border');
+  variable_del('yashare_linkunderline');
+  variable_del('yashare_linkicon');
+  variable_del('yashare_image');
+  variable_del('yashare_block_title');
+  variable_del('yashare_block_services');
+  variable_del('yashare_popup_services');
+  variable_del('yashare_l10n');
+  variable_del('yashare_popup_title');
+  variable_del('yashare_popup_link');
+  variable_del('yashare_popup_codeforblog');
+  variable_del('yashare_popup_vdirection');
+}

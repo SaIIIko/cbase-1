@@ -468,9 +468,9 @@ if (theme_get_setting('layout_mode', 'pika') == 'boxed') {
     if ($layout_background == "layout_image") {
         //$site_bg_preview = " #revolution {background-image: url('" . substr($site_bg_preview_img, 1) . "'); filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" . substr($site_bg_preview_img, 1) . "', sizingMethod='scale'); -ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" . substr($site_bg_preview_img, 1) . "', sizingMethod='scale'); }";
         if ($bg_image_type == 'texture') {
-            $site_bg_preview = " body {background: url('" . substr($site_bg_preview_img, 1) . "') repeat;";
+            $site_bg_preview = " body {background: url('" . substr($site_bg_preview_img, 1) . "');}";
         } else {
-            $site_bg_preview = " body {background: url('" . substr($site_bg_preview_img, 1) . "') no-repeat; background-attachment: fixed; ";
+            $site_bg_preview = " body {background: url('" . substr($site_bg_preview_img, 1) . "') no-repeat; background-attachment: fixed;}";
         }   
     }
     $other = ".copyright{background:none !important;} .panelSlider ul:hover li {width: 76px;} .panelSlider ul li:hover {width: 702px;} .panelSlider li {width: 201px;}";

@@ -2490,7 +2490,7 @@ margin-bottom:10px;
 #boxes article{height:260px; min-height:260px; max-height:260px; 	overflow:hidden;}
 
 
-#content-top {background-image:url('../images/patterns/pattern6.png'); padding-bottom:20px; padding-top:20px;}
+#content-top {padding-bottom:20px; padding-top:20px;}
 
 #content-bottom {padding-bottom:10px; padding-top:40px;}
 #content-bottom-left-right{

@@ -60,9 +60,9 @@ function pika_form_system_theme_settings_alter(&$form, &$form_state)
         '#title' => t('Select default slider'),
         '#description' => t('Select front page slider'),
         '#options' => array(
-            "rev" => t('Revolution Slider'),
-            "pan" => t('Panel Slider'),
-            "ref" => t('Refine Slider'),
+            "rev" => t('Revolution'),
+            "pan" => 'Panel',
+            "ref" => t('Nivo'),
 			"none" => t('None'),
         ),
         '#default_value' => theme_get_setting('slider-show', 'pika')

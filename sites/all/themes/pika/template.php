@@ -54,13 +54,13 @@ function pika_preprocess_page(&$variables)
         $vars['secondary_menu'] = FALSE;
     }
     if (theme_get_setting('slider-show', 'pika') == "rev") {
-		$settings['slider'] = theme_get_setting('slider', 'pika');
-		
-		if( !empty( $settings['slider']['layers'])) 
-		{
         $settings['slider'] = theme_get_setting('slider', 'pika');
         
-		//pika Slider variables
+        if( !empty( $settings['slider']['layers'])) 
+        {
+        $settings['slider'] = theme_get_setting('slider', 'pika');
+        
+        //pika Slider variables
         $Slider             = $settings['slider']['layers'];
         @usort($Slider, 'compareWeight');
         $variables['page']['revslider']['slider_container'] = array(
@@ -110,14 +110,14 @@ function pika_preprocess_page(&$variables)
                             $layerEndDelay     = isset($layer["properties"]["enddelay"]) ? $layer["properties"]["enddelay"] : '';
                             $layerEndEasingin  = isset($layer["properties"]["endeasingin"]) ? $layer["properties"]["endeasingin"] : '';
                             $layerEndAnimation = isset($layer["properties"]["endanimation"]) ? $layer["properties"]["endanimation"] : '';
-							$revsliderendtransition = isset($layer["properties"]["revslider-end-transition"]) ? $layer["properties"]["revslider-end-transition"] : 'no';
-							
+                            $revsliderendtransition = isset($layer["properties"]["revslider-end-transition"]) ? $layer["properties"]["revslider-end-transition"] : 'no';
+                            
                             $videoCode     = isset($layer['video-code']) ? $layer['video-code'] : '';
-							$videoWidth    = isset($layer['video-width']) ? $layer['video-width'] : '320';
-							$videoHeight   = isset($layer['video-height']) ? $layer['video-height'] : '220';
-							
-						if(is_array(@$layer['properties'])){
-							foreach (@$layer['properties'] as $property => $value) {
+                            $videoWidth    = isset($layer['video-width']) ? $layer['video-width'] : '320';
+                            $videoHeight   = isset($layer['video-height']) ? $layer['video-height'] : '220';
+                            
+                        if(is_array(@$layer['properties'])){
+                            foreach (@$layer['properties'] as $property => $value) {
                                 $param[$property] = "{$property}: {$value};";
                             }
 }
@@ -145,7 +145,7 @@ function pika_preprocess_page(&$variables)
                                     if ($videoID != "") {
                                         $videoType   = is_numeric($videoID) ? "vimeo" : "youtube";
 
-                                        if ($videoType == "youtube"): //youtube 	
+                                        if ($videoType == "youtube"): //youtube     
                                             $content .= '<div class="caption ' . $layerAnimation . ' ' . $layerEndAnimation . ' " ' . $htmlParams . ' ><iframe src="http://www.youtube.com/embed/' . $videoID . '?
 
 hd=1&amp;wmode=opaque&amp;controls=1&amp;showinfo=0" width="' . $videoWidth . '" height="' . $videoHeight . '" 
@@ -169,27 +169,27 @@ title=0&amp;byline=0&amp;portrait=0;api=1" width="' . $videoWidth . '" height="'
                 }
             }
         }
-	
-		
+    
+        
     }
     $build_slider_settings = "
-	var tpj=jQuery;
-	tpj.noConflict();
-	tpj(document).ready(function() {
-	if (tpj.fn.cssOriginal!=undefined)
-		tpj.fn.css = tpj.fn.cssOriginal;
-		tpj('.fullwidthbanner').revolution(
-			{
-				startwidth:" . $settings['slider']['width'] . ",
-				startheight:" . $settings['slider']['height'] . ",
-				onHoverStop:'" . $settings['slider']['stop_on_hover'] . "',
-				delay:" . $settings['slider']['delay'] . ",
-				shuffle:'" . $settings['slider']['shuffle'] . "',			
-				touchenabled:'" . $settings['slider']['touchenabled'] . "',	
-				navigationType:'none',	
-				fullWidth:'on',
-				shadow:0
-			});
+    var tpj=jQuery;
+    tpj.noConflict();
+    tpj(document).ready(function() {
+    if (tpj.fn.cssOriginal!=undefined)
+        tpj.fn.css = tpj.fn.cssOriginal;
+        tpj('.fullwidthbanner').revolution(
+            {
+                startwidth:" . $settings['slider']['width'] . ",
+                startheight:" . $settings['slider']['height'] . ",
+                onHoverStop:'" . $settings['slider']['stop_on_hover'] . "',
+                delay:" . $settings['slider']['delay'] . ",
+                shuffle:'" . $settings['slider']['shuffle'] . "',           
+                touchenabled:'" . $settings['slider']['touchenabled'] . "', 
+                navigationType:'none',  
+                fullWidth:'on',
+                shadow:0
+            });
 });";
     drupal_add_js($build_slider_settings, array('type' => 'inline','scope' => 'footer'));
 }
@@ -258,11 +258,11 @@ function pika_form_alter(&$form, &$form_state, $form_id)
         $contactForm .= "<h4 class='lead'>" . t('The Office');
         "</h4>";
         $contactForm .= "<ul class='contact-items'>
-			<li><i class='icon-location'></i> <strong>" . t('Address: ') . "</strong>" . theme_get_setting('contact-map', 'pika') . "</li>
-			<li><i class='icon-phone'></i> <strong>" . t('Phone: ') . "</strong>" . theme_get_setting('contact-phone', 'pika') . "</li>
-			<li><i class='icon-mail'></i> <strong>" . t('Email: ') . "</strong><a href='mailto:" . theme_get_setting('contact-email', 'pika') . "'>" . theme_get_setting('contact-email', 'pika') . "</a></li>
-	
-							</ul>";
+            <li><i class='icon-location'></i> <strong>" . t('Address: ') . "</strong>" . theme_get_setting('contact-map', 'pika') . "</li>
+            <li><i class='icon-phone'></i> <strong>" . t('Phone: ') . "</strong>" . theme_get_setting('contact-phone', 'pika') . "</li>
+            <li><i class='icon-mail'></i> <strong>" . t('Email: ') . "</strong><a href='mailto:" . theme_get_setting('contact-email', 'pika') . "'>" . theme_get_setting('contact-email', 'pika') . "</a></li>
+    
+                            </ul>";
         $contactForm .= "</div>";
         //$form['#prefix'] = $contactForm;
     }
@@ -375,9 +375,9 @@ if (current_path() == "contact" && $mapStatus == "1") {
 //global $language ; $lang_name = $language->language ;
 //
 //if($lang_name == "ar" || $lang_name == "he"){
-//	drupal_add_css(drupal_get_path('theme','pika').'/css/style-rtl.css');
+//  drupal_add_css(drupal_get_path('theme','pika').'/css/style-rtl.css');
 //}else{
-//	drupal_add_css(drupal_get_path('theme','pika').'/css/style-rtl-off.css');
+//  drupal_add_css(drupal_get_path('theme','pika').'/css/style-rtl-off.css');
 //}
 //
 $body_font_color               = theme_get_setting('body_font_color', 'pika');
@@ -415,7 +415,7 @@ h1, h2, h3, h4, h5, h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {color:" . $heading_f
     padding: 10px 40px;
     border: none;
     border-bottom:1px solid rgba(0,0,0,0.1);
-	color:" . $style_menu_font . ";
+    color:" . $style_menu_font . ";
   }  
   .contact-items-wrap {float:left; width:100%; margin-right:25px; padding-top:15px;}
   #contact-site-form {float:left; width:100%; }
@@ -427,7 +427,7 @@ h1, h2, h3, h4, h5, h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {color:" . $heading_f
     padding: 10px 40px;
     border: none;
     border-bottom:1px solid rgba(0,0,0,0.1);
-	color:" . $style_menu_font . ";
+    color:" . $style_menu_font . ";
   }
 }
 .footer-overlay {background-color:" . $style_footer_bgcolor . ";}
@@ -442,11 +442,11 @@ $body_font_family              = '@import url(http://fonts.googleapis.com/css?fa
 $heading_font_family           = '@import url(http://fonts.googleapis.com/css?family=' . str_replace(' ', '+', $heading_font) . ':100,200,300,400,500,600,700&subset=latin,cyrillic,latin-ext,vietnamese,greek,greek-ext,cyrillic-ext);';
 $menu_font_family              = '@import url(http://fonts.googleapis.com/css?family=' . str_replace(' ', '+', $menu_font) . ':100,200,300,400,500,600,700&subset=latin,cyrillic,latin-ext,vietnamese,greek,greek-ext,cyrillic-ext);';
 $fonts                         = "body {font-family: " . $body_font . "; }
-		 .ie9 { font-family: " . $body_font . "; }
-		 .ie9 * { font-family: " . $body_font . "; }
-		 p, .field input, .form-text, .form-textarea, .field input[type='*'], .field textarea, .field.prepend .adjoined, .field.append .adjoined, .btn, .skiplink,.tabs .tab-nav > li > a, .alert, .ch-info h3, .ch-info p a,  {font-family: " . $body_font . "; }
-		 h1, h2, h3, h4, h5, h6 {font-family: " . $heading_font . "; }
-		 #navigation {font-family: " . $menu_font . ";}";
+         .ie9 { font-family: " . $body_font . "; }
+         .ie9 * { font-family: " . $body_font . "; }
+         p, .field input, .form-text, .form-textarea, .field input[type='*'], .field textarea, .field.prepend .adjoined, .field.append .adjoined, .btn, .skiplink,.tabs .tab-nav > li > a, .alert, .ch-info h3, .ch-info p a,  {font-family: " . $body_font . "; }
+         h1, h2, h3, h4, h5, h6 {font-family: " . $heading_font . "; }
+         #navigation {font-family: " . $menu_font . ";}";
 if (theme_get_setting('header_line_bg', 'pika') == 'color') {
     $header_line = " #header_line { background-color: " . theme_get_setting('header_line_bg_color', 'pika') . ";}";
 } else {
@@ -463,14 +463,14 @@ if (theme_get_setting('layout_mode', 'pika') == 'boxed') {
         $site_bg_preview = " body {background-color: " . $layout_background_color . ";}";
     }
     if ($layout_background == "layout_pattern") {
-		 $site_bg_preview = "body {background-image: url('" . base_path() . drupal_get_path('theme', 'pika') . '/images/patterns/' . $layout_background_pattern . ".png'); background-repeat: repeat;}";
+         $site_bg_preview = "body {background-image: url('" . base_path() . drupal_get_path('theme', 'pika') . '/images/patterns/' . $layout_background_pattern . ".png'); background-repeat: repeat;}";
     }
     if ($layout_background == "layout_image") {
         //$site_bg_preview = " #revolution {background-image: url('" . substr($site_bg_preview_img, 1) . "'); filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" . substr($site_bg_preview_img, 1) . "', sizingMethod='scale'); -ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" . substr($site_bg_preview_img, 1) . "', sizingMethod='scale'); }";
         if ($bg_image_type == 'texture') {
             $site_bg_preview = " body {background: url('" . substr($site_bg_preview_img, 1) . "');}";
         } else {
-            $site_bg_preview = " body {background: url('" . substr($site_bg_preview_img, 1) . "') no-repeat; background-attachment: fixed;}";
+            $site_bg_preview = " body {background: url('" . substr($site_bg_preview_img, 1) . "') center top no-repeat; background-attachment: fixed;}";
         }   
     }
     $other = ".copyright{background:none !important;} .panelSlider ul:hover li {width: 76px;} .panelSlider ul li:hover {width: 702px;} .panelSlider li {width: 201px;}";

@@ -20,7 +20,7 @@
         <?php endif; ?>
         <!-- end. logo & slogan -->
         <?php if ($site_slogan): ?>
-        <div class="site_slogan nine column"><?php print $site_slogan; ?></div>
+        <div class="site_slogan eight columns"><?php print $site_slogan; ?></div>
         <?php endif; ?>
       </div>
       <nav id="navigation" role="navigation">
@@ -39,7 +39,7 @@
   </div>
   <div id="header_line" class="container header_line"></div>
   <?php if(drupal_is_front_page()): ?>
-	  <?php if (theme_get_setting('slider-show', 'pika') == "rev"): ?>
+    <?php if (theme_get_setting('slider-show', 'pika') == "rev"): ?>
       <?php print render($page['revslider']); ?>
       <?php endif; ?>
       <?php if (theme_get_setting('slider-show', 'pika') == "pan"): ?>
@@ -47,7 +47,7 @@
       <?php endif; ?>
       <?php if (theme_get_setting('slider-show', 'pika') == "ref"): ?>
       <?php print render($page['slider_r']); ?>
-	  <?php endif; ?>
+    <?php endif; ?>
   <?php endif; ?>
   <?php print $messages; ?>
   <?php if(!drupal_is_front_page()): ?>

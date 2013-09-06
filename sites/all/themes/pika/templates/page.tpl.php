@@ -20,7 +20,7 @@
         <?php endif; ?>
         <!-- end. logo & slogan -->
         <?php if ($site_slogan): ?>
-        <div class="site_slogan eight columns"><?php print $site_slogan; ?></div>
+        <div class="site_slogan six columns"><?php print $site_slogan; ?></div>
         <?php endif; ?>
       </div>
       <nav id="navigation" role="navigation">
@@ -65,6 +65,13 @@
     <div class="pre-content-overlay"></div>
   </div>
   <?php print variable_get("RenderContactMap"); ?>
+  <?php if ($page['content_top']): ?>
+  <div id="content-top">
+    <div class="row">
+      <div><?php print render($page['content_top']); ?></div>
+    </div>
+  </div>
+  <?php endif; ?>
   <div id="content-wrap" class="row"> <?php print render($title_prefix); ?>
     <?php if (!empty($tabs['#primary'])): ?>
     <div class="tabs-wrapper clearfix"><?php print render($tabs); ?></div>
@@ -85,13 +92,6 @@
     <div id="content" class="twelve columns"><?php print render($page['content']); ?></div>
     <?php endif; ?>
     <?php endif; ?>
-  </div>
-  <?php endif; ?>
-  <?php if ($page['content_top']): ?>
-  <div id="content-top">
-    <div class="row">
-      <div><?php print render($page['content_top']); ?></div>
-    </div>
   </div>
   <?php endif; ?>
   <?php if ($page['boxes']): ?>

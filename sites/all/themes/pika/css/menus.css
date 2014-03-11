@@ -7,7 +7,8 @@
 #navigation .nolink { padding: 0 15px !important; cursor:pointer;}
   /*display dropdown nav*/
   #navigation .selector {display: inline-block;}
-#navigation #main-menu > ul > li {padding-top:0px; border-left:1px solid #F4F4F4; height:44px; line-height:40px;}
+#navigation #main-menu > ul > li {padding-top:0px; border-left:1px solid #F4F4F4; height:50px; line-height:40px;}
+
 #navigation #main-menu > ul > li > a, #navigation a {line-height:40px; padding-top:0px; }
 #navigation #main-menu > ul > li > a.active { height:44px;line-height:33px;}
 #navigation #main-menu > ul > li:hover > ul,#main-menu > ul li.sfHover > ul{top:34px; }
@@ -26,7 +27,7 @@
 
 
 #navigation #main-menu > ul li li:hover ul,#main-menu > ul li li.sfHover ul,#main-menu > ul li li:hover ul,#main-menu > ul li li.sfHover ul{left:200px;top:-10px}
-#navigation #main-menu > ul a{height:25px;line-height:25px;text-decoration:none;padding:0 15px}
+#navigation #main-menu > ul a{height:25px;line-height:25px;text-decoration:none;padding:0 15px;}
 
 
 #navigation #main-menu > ul ul{left:0;padding-top:10px;position:absolute;top:-999em;width:200px;z-index:9999}
@@ -42,4 +43,69 @@
 #navigation .selector {
   display: none;
   position:relative;
+}
+
+
+/*---------left menu---------*/
+/*.left_sidebar #navigation{
+  float: left;
+}
+.left_sidebar #main-menu{
+    list-style-type: none; 
+    width: 198px;
+    margin: 0; 
+    padding: 0;
+}
+.left_sidebar #navigation #main-menu > ul{
+    list-style-type: none; 
+    width: 180px;
+    margin: 0; 
+    padding: 0; 
+}
+.left_sidebar #navigation #main-menu > li{
+  position: relative; 
+}
+
+.left_sidebar #navigation #main-menu > li > a{
+  font-size:18px;
+  text-decoration:none;
+}
+.left_sidebar #navigation #main-menu li ul {
+    position: absolute; 
+    display: none; 
+    top: -20px; 
+    left: 180px; 
+}
+.left_sidebar #navigation #main-menu li:hover ul {
+   display: block; 
+}
+.left_sidebar #navigation #main-menu li:hover ul li ul{
+ display: none;
+}
+.left_sidebar #navigation #main-menu li ul li:hover ul {
+    position: absolute; 
+    display: block; 
+    top: -50px; 
+    left: 178px; 
+}
+.left_sidebar #navigation #main-menu li ul li{
+  text-align:left;
+}
+.left_sidebar #navigation #main-menu li ul li a{
+  text-decoration:none;
+}
+.left_sidebar #navigation #main-menu .submenu_active{
+  border-left: 4px solid #9c9494;
+}*/
+
+/*-----------------*/
+#block-menu-menu-leftmenu .menu a{
+  color: #000412;
+}
+
+#block-menu-menu-leftmenu .menu .expanded .menu{
+  display: none;
+}
+.submenu_active .first .expanded .menu{
+  display: block;
 }

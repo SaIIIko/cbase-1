@@ -50,6 +50,10 @@
     <?php endif; ?>
   <?php endif; ?>
   <?php print $messages; ?>
+  <?php if ($page['left_sidebar']): ?>  
+      <div class='left_sidebar'><?php print render($page['left_sidebar']);?></div>
+  <?php endif;?>
+    <div class="<?php if ($page['left_sidebar']): print 'with_left'; endif;?> right_content">
   <?php if(!drupal_is_front_page()): ?>
   <div id="pre-content">
     <div class="row"> 
@@ -65,71 +69,72 @@
     <div class="pre-content-overlay"></div>
   </div>
   <?php print variable_get("RenderContactMap"); ?>
-  <?php if ($page['content_top']): ?>
-  <div id="content-top">
-    <div class="row">
-      <div><?php print render($page['content_top']); ?></div>
+    <?php if ($page['content_top']): ?>
+    <div id="content-top">
+      <div class="row">
+        <div><?php print render($page['content_top']); ?></div>
+      </div>
     </div>
-  </div>
-  <?php endif; ?>
-  <div id="content-wrap" class="row"> <?php print render($title_prefix); ?>
-    <?php if (!empty($tabs['#primary'])): ?>
-    <div class="tabs-wrapper clearfix"><?php print render($tabs); ?></div>
     <?php endif; ?>
-    <?php print render($page['help']); ?>
-    <?php if ($action_links): ?>
-    <ul class="action-links">
-      <?php print render($action_links); ?>
-    </ul>
+    <div id="content-wrap" class="row"> <?php print render($title_prefix); ?>
+      <?php if (!empty($tabs['#primary'])): ?>
+      <div class="tabs-wrapper clearfix"><?php print render($tabs); ?></div>
+      <?php endif; ?>
+      <?php print render($page['help']); ?>
+      <?php if ($action_links): ?>
+      <ul class="action-links">
+        <?php print render($action_links); ?>
+      </ul>
+      <?php endif; ?>
+      <?php if(theme_get_setting('sidebar_mode', 'pika')=="fullWidth"): ?>
+      <div id="content" class="twelve columns"><?php print render($page['content']); ?></div>
+      <?php else: ?>
+      <?php if ($page['sidebar']): ?>
+      <div id="content" class="nine columns"> <?php print render($page['content']); ?> </div>
+      <div id="sidebar" class="three columns"><?php print render($page['sidebar']); ?></div>
+      <?php else: ?>
+      <div id="content" class="twelve columns"><?php print render($page['content']); ?></div>
+      <?php endif; ?>
+      <?php endif; ?>
+    </div>
     <?php endif; ?>
-    <?php if(theme_get_setting('sidebar_mode', 'pika')=="fullWidth"): ?>
-    <div id="content" class="twelve columns"><?php print render($page['content']); ?></div>
-    <?php else: ?>
-    <?php if ($page['sidebar']): ?>
-    <div id="content" class="nine columns"> <?php print render($page['content']); ?> </div>
-    <div id="sidebar" class="three columns"><?php print render($page['sidebar']); ?></div>
-    <?php else: ?>
-    <div id="content" class="twelve columns"><?php print render($page['content']); ?></div>
+    <?php if ($page['boxes']): ?>
+    <div id="boxes">
+      <div class="row">
+        <div><?php print render($page['boxes']); ?></div>
+      </div>
+    </div>
     <?php endif; ?>
+    <?php if ($page['content_bottom']): ?>
+    <div id="content-bottom">
+      <div class="row">
+        <div><?php print render($page['content_bottom']); ?></div>
+      </div>
+    </div>
     <?php endif; ?>
-  </div>
-  <?php endif; ?>
-  <?php if ($page['boxes']): ?>
-  <div id="boxes">
-    <div class="row">
-      <div><?php print render($page['boxes']); ?></div>
+    <?php if ($page['content_bottom_left'] || $page['content_bottom_right']): ?>
+    <div id="content-bottom-left-right">
+      <div class="row">
+        <div class="six columns"><?php print render($page['content_bottom_left']); ?></div>
+        <div class="six columns"><?php print render($page['content_bottom_right']); ?></div>
+      </div>
     </div>
-  </div>
-  <?php endif; ?>
-  <?php if ($page['content_bottom']): ?>
-  <div id="content-bottom">
-    <div class="row">
-      <div><?php print render($page['content_bottom']); ?></div>
+    <?php endif; ?>
+    <?php if ($page['prefooter_first']): ?>
+    <div id="prefooter-first">
+      <div class="row">
+        <div id="prefooter-content"><?php print render($page['prefooter_first']); ?></div>
+      </div>
     </div>
-  </div>
-  <?php endif; ?>
-  <?php if ($page['content_bottom_left'] || $page['content_bottom_right']): ?>
-  <div id="content-bottom-left-right">
-    <div class="row">
-      <div class="six columns"><?php print render($page['content_bottom_left']); ?></div>
-      <div class="six columns"><?php print render($page['content_bottom_right']); ?></div>
+    <?php endif; ?>
+    <?php if ($page['prefooter_second']): ?>
+    <div id="prefooter-second">
+      <div class="row">
+        <div id="prefooter-content"><?php print render($page['prefooter_second']); ?></div>
+      </div>
     </div>
-  </div>
-  <?php endif; ?>
-  <?php if ($page['prefooter_first']): ?>
-  <div id="prefooter-first">
-    <div class="row">
-      <div id="prefooter-content"><?php print render($page['prefooter_first']); ?></div>
-    </div>
-  </div>
-  <?php endif; ?>
-  <?php if ($page['prefooter_second']): ?>
-  <div id="prefooter-second">
-    <div class="row">
-      <div id="prefooter-content"><?php print render($page['prefooter_second']); ?></div>
-    </div>
-  </div>
-  <?php endif; ?>
+    <?php endif; ?>
+</div>
   <div id="footer">
     <div id="background-footer-overlay">
       <div class="row">
@@ -159,3 +164,31 @@
   </div>
 </div>
 <?php endif; ?>
+<!--Yandex metrika-->
+<meta name='yandex-verification' content='7e5aa55299f4047c' />
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter22715383 = new Ya.Metrika({id:22715383,
+                    webvisor:true,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true});
+        } catch(e) { }
+    });
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/22715383" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->

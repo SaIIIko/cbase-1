@@ -50,10 +50,13 @@
     <?php endif; ?>
   <?php endif; ?>
   <?php print $messages; ?>
+
   <?php if ($page['left_sidebar']): ?>  
       <div class='left_sidebar'><?php print render($page['left_sidebar']);?></div>
   <?php endif;?>
+
     <div class="<?php if ($page['left_sidebar']): print 'with_left'; endif;?> right_content">
+
   <?php if(!drupal_is_front_page()): ?>
   <div id="pre-content">
     <div class="row"> 
@@ -68,7 +71,13 @@
     </div>
     <div class="pre-content-overlay"></div>
   </div>
+
+
+
   <?php print variable_get("RenderContactMap"); ?>
+
+
+
     <?php if ($page['content_top']): ?>
     <div id="content-top">
       <div class="row">
@@ -134,7 +143,9 @@
       </div>
     </div>
     <?php endif; ?>
+
 </div>
+
   <div id="footer">
     <div id="background-footer-overlay">
       <div class="row">
@@ -164,3 +175,34 @@
   </div>
 </div>
 <?php endif; ?>
+
+
+<!--Yandex metrika-->
+<meta name='yandex-verification' content='7e5aa55299f4047c' />
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter23629243 = new Ya.Metrika({id:23629243,
+                    webvisor:true,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true});
+        } catch(e) { }
+    });
+
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/23629243" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->

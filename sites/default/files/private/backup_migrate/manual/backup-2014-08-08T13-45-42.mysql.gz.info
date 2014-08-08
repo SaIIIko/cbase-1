@@ -1,0 +1,8 @@
+filename = "backup-2014-08-08T13-45-42"
+description = ""
+datestamp = "1407498343"
+generator = "Backup and Migrate (http://drupal.org/project/backup_migrate)"
+generatorversion = "7.x-2.x"
+sites[0][version] = "7.22"
+sites[0][name] = "Название сайта"
+sites[0][url] = "http://cbase.eskirf.ru/"

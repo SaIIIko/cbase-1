@@ -54,6 +54,42 @@ function pika_form_system_theme_settings_alter(&$form, &$form_state)
         '#title' => t('General'),
         '#weight' => -11
     );
+
+    /************Meta settings**************/
+    $form['meta_settings'] = array(
+        '#type' => 'fieldset',
+        '#title' => 'Настройка Мета-тегов',
+        '#weight' => 5,
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+    );
+
+    $form['meta_settings']['meta_description'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Description',
+        '#default_value' => theme_get_setting('meta_description'),
+        '#size' => 250,
+        '#maxlength' => 250,
+        '#required' => FALSE,
+    );
+
+    $form['meta_settings']['meta_abstract'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Аннотация',
+        '#default_value' => theme_get_setting('meta_abstract'),
+        '#size' => 250,
+        '#maxlength' => 250,
+        '#required' => FALSE,
+    );
+
+    $form['meta_settings']['meta_keywords'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Ключевые слова',
+        '#default_value' => theme_get_setting('meta_keywords'),
+        '#size' => 250,
+        '#maxlength' => 250,
+        '#required' => FALSE,
+    );
     // Breadcrumb elements
     $form['InspiroSettings']['general-settings']['slider-show']        = array(
         '#type' => 'select',

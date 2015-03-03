@@ -324,6 +324,36 @@ function pika_page_alter($page)
         )
     );
     drupal_add_html_head($viewport, 'viewport');
+
+    $meta_keywords = array(
+        '#tag' => 'meta',
+        '#attributes' => array(
+            'name' => 'keywords',
+            'content' => theme_get_setting('meta_keywords','pika'),
+        ),
+    );
+
+    $meta_description = array(
+        '#tag' => 'meta',
+        '#attributes' => array(
+            'name' => 'description',
+            'content' => theme_get_setting('meta_description','pika'),
+        ),
+    );
+
+    $meta_abstract = array(
+        '#tag' => 'meta',
+        '#attributes' => array(
+            'name' => 'abstract',
+            'content' => theme_get_setting('meta_abstract','pika'),
+        ),
+    );
+
+    if(drupal_is_front_page()){
+        drupal_add_html_head($meta_keywords, 'meta_keywords');
+        drupal_add_html_head($meta_description, 'meta_description');
+        drupal_add_html_head($meta_abstract, 'meta_abstract');
+    }
 }
 /**
  * Breadcrumb.
